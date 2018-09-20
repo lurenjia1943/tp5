@@ -14,7 +14,7 @@ class Index extends Controller
         'Auth' => ['except'  => ['login','sms']],
     ];
 
-    protected $tel = ['13653592881'];
+    protected $tel = ['13653592881','13033418810','15835905667'];
 
     //登陆
     public function login(){
