@@ -6,6 +6,7 @@ use think\Controller;
 use think\Db;
 use app\index\model\User as U;
 use app\index\model\Jilu as J;
+use app\index\model\Admin as A;
 
 class Index extends Controller
 {
@@ -14,15 +15,24 @@ class Index extends Controller
         'Auth' => ['except'  => ['login','sms']],
     ];
 
-    protected $tel = ['13653592881','13033418810','15835905667'];
+    //protected $tel = ['13653592881','13033418810','15835905667'];
 
     //登陆
     public function login(){
         $tel = input('tel');
         $captcha = input('captcha');
+
+        $admin = A::where('tel',$tel)->find();
         
-        if (in_array($tel, $this->tel) and $captcha == session($tel)) {
-            session('user_id', 'wjl');
+        if ($admin and $captcha == session($tel)) {
+            //更新登陆时间
+            session('prev_time',$admin->prev_time);
+            $admin->prev_time = date("Y-m-d H:i:s"); 
+            //更新登陆次数
+            $admin->num = ['inc', 1];
+            $admin->save();
+
+            session('admin_id', $admin->id);
             session('captcha', null);
             echo "OK";
         }else{
@@ -44,6 +54,15 @@ class Index extends Controller
 
     public function welcome()
     {
+        //查询用户信息
+        $admin = A::where('id',session('admin_id'))->find();
+        $tel = $admin->tel;
+        $num = $admin->num;
+
+        $this->assign("tel",$tel);
+        $this->assign("num",$num);
+        $this->assign("prev_time",session('prev_time'));
+
         $user = new U;
         $count = $user->group('name')->count();
         $zongbenjin = $user->sum('money');//剩余总本金
@@ -166,7 +185,10 @@ class Index extends Controller
         $tel = input('tel');
         //$tel = "13653592881";
 
-        if (!in_array($tel, $this->tel)) {
+        //查询数据库里有无此账号
+        $admin = A::where('tel',$tel)->find();
+
+        if ($admin == null) {
             echo "手机号码错误!";
             die();
         }

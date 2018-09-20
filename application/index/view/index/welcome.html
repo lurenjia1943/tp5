@@ -12,7 +12,12 @@
     </head>
     <body>
     <div class="x-body layui-anim layui-anim-up">
-        
+        <blockquote class="layui-elem-quote">
+            欢迎管理员：<span class="x-red">{$tel}</span>！&nbsp;&nbsp;&nbsp;
+            上次登陆时间:<span class="x-red">{$prev_time}</span>！&nbsp;&nbsp;&nbsp;
+            这是您的第:<span class="x-red">{$num}</span>次登陆！&nbsp;&nbsp;&nbsp;
+            <span class="x-red">如非本人操作，请及时联系管理员！</span>
+        </blockquote>
     <div class="x-nav">
       <a class="layui-btn layui-btn-small" style="line-height:1.6em;margin-top:3px;float:right" href="javascript:location.replace(location.href);" title="刷新">
         <i class="layui-icon" style="line-height:30px">ဂ</i></a>
@@ -76,6 +81,9 @@
                         <tr>
                             <th>PHP版本</th>
                             <td>{$phpversion}</td></tr>
+                        <tr>
+                            <th>MYSQL版本</th>
+                            <td>5.5.3</td></tr>
                     </tbody>
                 </table>
             </div>
